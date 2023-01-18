@@ -1,7 +1,5 @@
 # ELM POC
 
-* [ELM](https://guide.elm-lang.org/)
-
 ### Usage
 
 * Create the project
