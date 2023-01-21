@@ -1,30 +1,47 @@
-module Main exposing (main)
+module Main exposing (..)
 
 import Html
-
-
-getInput startPoint finishPoint crewQuantity =
-    calculateDistanceInKilometers startPoint finishPoint
-        |> calculateTimeWasted
-        |> String.fromFloat
 
 
 calculateDistanceInKilometers startPoint finishPoint =
     finishPoint - startPoint
 
 
-convertMinutesToHours timeInMinutes = 
+calculateTimeWastedByEachTransport distanceInKilometers = 
+    let
+        transports = ["plane", "car", "motorcycle", "boat"]
+    in
+        List.map (calculateTimeWastedByTransport distanceInKilometers) transports
+
+
+calculateTimeWastedByTransport distanceInKilometers transport =
+    if transport == "plane" then
+        (transport, calculateTimeWasted distanceInKilometers 2)
+    else if transport == "car" then
+        (transport, calculateTimeWasted distanceInKilometers 10)
+    else if transport == "motorcycle" then
+        (transport, calculateTimeWasted distanceInKilometers 5)
+    else if transport == "boat" then
+        (transport, calculateTimeWasted distanceInKilometers 10)
+    else
+        ("invalid transport", -1)
+
+
+calculateTimeWasted distanceInKilometers timeToDoOneKilometer = 
+    let
+        oneKilometer = 
+            1
+    in
+    convertMinutesToHours ((distanceInKilometers * timeToDoOneKilometer) / oneKilometer)
+
+
+convertMinutesToHours : Float -> Float
+convertMinutesToHours timeInMinutes =
     timeInMinutes / 60
 
 
-calculateTimeWasted distanceInKilometers = 
-    let 
-        kilometersToTimeMap = 
-            { kilometers = 1, timeWasted = 10 }
-    in
-    convertMinutesToHours ((distanceInKilometers * kilometersToTimeMap.timeWasted) / kilometersToTimeMap.kilometers)
-
-
 main =
-    getInput 0 1000 4
+    calculateDistanceInKilometers 0 1000
+        |> calculateTimeWastedByEachTransport
+        |> Debug.toString
         |> Html.text
