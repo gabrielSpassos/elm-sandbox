@@ -1,4 +1,4 @@
-## National-treasure  Map Drawing
+## National-treasure Map Drawing
 
 
 You are part of a treasure hunters that travels around the world in order to solve puzzles, in your latest discovery you found the first clue of the Lost Snake Treasure.

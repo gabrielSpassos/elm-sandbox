@@ -7,24 +7,35 @@ calculateDistanceInKilometers startPoint finishPoint =
     finishPoint - startPoint
 
 
+getTransports =
+    let
+        plane = {name = "plane", timeToDoOneKilometer = 2}
+        car = {name = "plane", timeToDoOneKilometer = 10}
+        motorcycle = {name = "plane", timeToDoOneKilometer = 5}
+        boat = {name = "plane", timeToDoOneKilometer = 10}
+    in
+    [plane, car, motorcycle, boat]
+
+
 calculateTimeWastedByEachTransport distanceInKilometers = 
     let
-        transports = ["plane", "car", "motorcycle", "boat"]
+        transports = 
+            getTransports
     in
         List.map (calculateTimeWastedByTransport distanceInKilometers) transports
 
 
+type alias TravelSummary = 
+    { 
+        transportName : String,
+        distanceInKilometers : Float,
+        timeToDoOneKilometer : Float,
+        totalTimeWasted: Float
+    }
+
+
 calculateTimeWastedByTransport distanceInKilometers transport =
-    if transport == "plane" then
-        (transport, calculateTimeWasted distanceInKilometers 2)
-    else if transport == "car" then
-        (transport, calculateTimeWasted distanceInKilometers 10)
-    else if transport == "motorcycle" then
-        (transport, calculateTimeWasted distanceInKilometers 5)
-    else if transport == "boat" then
-        (transport, calculateTimeWasted distanceInKilometers 10)
-    else
-        ("invalid transport", -1)
+    TravelSummary transport.name distanceInKilometers transport.timeToDoOneKilometer (calculateTimeWasted distanceInKilometers transport.timeToDoOneKilometer)
 
 
 calculateTimeWasted distanceInKilometers timeToDoOneKilometer = 
@@ -35,13 +46,12 @@ calculateTimeWasted distanceInKilometers timeToDoOneKilometer =
     convertMinutesToHours ((distanceInKilometers * timeToDoOneKilometer) / oneKilometer)
 
 
-convertMinutesToHours : Float -> Float
 convertMinutesToHours timeInMinutes =
     timeInMinutes / 60
 
 
 main =
-    calculateDistanceInKilometers 0 1000
+    calculateDistanceInKilometers 0 940
         |> calculateTimeWastedByEachTransport
         |> Debug.toString
         |> Html.text
