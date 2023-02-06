@@ -23,6 +23,9 @@ Output
 Hours waste, time waste by transports
 ```
 
+<img width="1440" alt="Screen Shot 2023-02-06 at 10 02 46" src="https://user-images.githubusercontent.com/32275521/216978380-d0a880b5-3ce3-4b58-abbc-5044601ea41e.png">
+
+
 ### Usage
 
 * Run project
