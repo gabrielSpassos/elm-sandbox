@@ -1,28 +1,43 @@
 module Main exposing (..)
 
 import Html
+import Round exposing (..)
+
 
 
 calculateDistanceInKilometers startPoint finishPoint =
     finishPoint - startPoint
 
 
+type alias Vehicle = 
+    { 
+        name : String,
+        timeToDoOneKilometer : Float,
+        maxPassagers : Int,
+        extraTimeMultiplier: Float
+    }
+
+
 getTransports =
     let
-        plane = {name = "plane", timeToDoOneKilometer = 2}
-        car = {name = "car", timeToDoOneKilometer = 10}
-        motorcycle = {name = "motorcycle", timeToDoOneKilometer = 5}
-        boat = {name = "boat", timeToDoOneKilometer = 10}
+        plane = 
+            Vehicle "plane" 2 9999 1
+        car = 
+            Vehicle "car" (plane.timeToDoOneKilometer * 5) 5 0.15
+        motorcycle = 
+            Vehicle "motorcycle" (car.timeToDoOneKilometer / 2) 2 0.1
+        boat = 
+            Vehicle "boat" (motorcycle.timeToDoOneKilometer * 2) 6 0.05
     in
     [plane, car, motorcycle, boat]
 
 
-calculateTimeWastedByEachTransport distanceInKilometers = 
+calculateTimeWastedByEachTransport crewQuantity distanceInKilometers = 
     let
         transports = 
             getTransports
     in
-        List.map (calculateTimeWastedByTransport distanceInKilometers) transports
+        List.map (calculateTimeWastedByTransport distanceInKilometers crewQuantity) transports
 
 
 type alias TravelSummary = 
@@ -34,25 +49,33 @@ type alias TravelSummary =
     }
 
 
-calculateTimeWastedByTransport : Float -> { a | name : String, timeToDoOneKilometer : Float } -> TravelSummary
-calculateTimeWastedByTransport distanceInKilometers transport =
-    TravelSummary transport.name distanceInKilometers transport.timeToDoOneKilometer (calculateTimeWasted distanceInKilometers transport.timeToDoOneKilometer)
+calculateTimeWastedByTransport distanceInKilometers crewQuantity transport =
+    TravelSummary 
+        transport.name
+        distanceInKilometers
+        transport.timeToDoOneKilometer
+        (calculateTimeWasted distanceInKilometers crewQuantity transport)
 
 
-calculateTimeWasted distanceInKilometers timeToDoOneKilometer = 
-    let
-        oneKilometer = 
-            1
-    in
-    convertMinutesToHours ((distanceInKilometers * timeToDoOneKilometer) / oneKilometer)
+calculateTimeWasted distanceInKilometers crewQuantity transport = 
+    if crewQuantity > transport.maxPassagers then
+        distanceInKilometers * transport.timeToDoOneKilometer
+            |> increseTime transport.extraTimeMultiplier
+            |> convertMinutesToHours
+    else
+        convertMinutesToHours (distanceInKilometers * transport.timeToDoOneKilometer)
+
+
+increseTime extraTimeMultiplier timeWasted =
+    timeWasted + (timeWasted * extraTimeMultiplier / 100)
 
 
 convertMinutesToHours timeInMinutes =
-    timeInMinutes / 60
+    roundNum 2 (timeInMinutes / 60)
 
 
 main =
-    calculateDistanceInKilometers 0 940
-        |> calculateTimeWastedByEachTransport
+    calculateDistanceInKilometers 1000 2000
+        |> calculateTimeWastedByEachTransport 8
         |> Debug.toString
         |> Html.text
