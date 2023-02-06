@@ -40,18 +40,29 @@ testCalculateTimeWasted =
 
 testCalculateTimeWastedByTransport : Test
 testCalculateTimeWastedByTransport = 
+    let
+        expectedPlaneResult = 
+            {transportName = "plane", distanceInKilometers = 720, timeToDoOneKilometer = 2, totalTimeWasted = 24}
+        
+        expectedCarResult = 
+             {transportName = "car", distanceInKilometers = 315.5, timeToDoOneKilometer = 10, totalTimeWasted = 52.583333333333336}
+
+        expectedMotorcycleResult = 
+             {transportName = "motorcycle", distanceInKilometers = 5238, timeToDoOneKilometer = 5, totalTimeWasted = 436.5}
+
+        expectedBoatResult = 
+             {transportName = "boat", distanceInKilometers = 1576.47, timeToDoOneKilometer = 10, totalTimeWasted = 262.745}
+    in
     describe "should return time wasted by transport"
         [
             test "should return 24 for plane" <|
-                \_ -> Expect.equal ("plane", 24) (calculateTimeWastedByTransport 720 "plane")
+                \_ -> Expect.equal expectedPlaneResult (calculateTimeWastedByTransport 720 {name = "plane", timeToDoOneKilometer = 2})
             , test "should return 52.583333333333336 for car" <|
-                \_ -> Expect.equal ("car", 52.583333333333336) (calculateTimeWastedByTransport 315.5 "car")
+                \_ -> Expect.equal expectedCarResult (calculateTimeWastedByTransport 315.5 {name = "car", timeToDoOneKilometer = 10})
             , test "should return 436.5 for motorcycle" <|
-                \_ -> Expect.equal ("motorcycle", 436.5) (calculateTimeWastedByTransport 5238 "motorcycle")
+                \_ -> Expect.equal expectedMotorcycleResult (calculateTimeWastedByTransport 5238 {name = "motorcycle", timeToDoOneKilometer = 5})
             , test "should return 262.745 for boat" <|
-                \_ -> Expect.equal ("boat", 262.745) (calculateTimeWastedByTransport 1576.47 "boat")
-            , test "should return invalid response" <|
-                \_ -> Expect.equal ("invalid transport", -1) (calculateTimeWastedByTransport 10 "bike")
+                \_ -> Expect.equal expectedBoatResult (calculateTimeWastedByTransport 1576.47 {name = "boat", timeToDoOneKilometer = 10})
         ]
 
 
@@ -59,7 +70,11 @@ testCalculateTimeWastedByEachTransport : Test
 testCalculateTimeWastedByEachTransport = 
     let
         expectedResult = 
-            [("plane", 40), ("car", 200), ("motorcycle", 100), ("boat", 200)]
+            [{transportName = "plane", distanceInKilometers = 1200, timeToDoOneKilometer = 2, totalTimeWasted = 40},
+             {transportName = "car", distanceInKilometers = 1200, timeToDoOneKilometer = 10, totalTimeWasted = 200},
+             {transportName = "motorcycle", distanceInKilometers = 1200, timeToDoOneKilometer = 5, totalTimeWasted = 100},
+             {transportName = "boat", distanceInKilometers = 1200, timeToDoOneKilometer = 10, totalTimeWasted = 200}]
     in
     test "Should return time wasted for each transport"
         (\_ -> Expect.equal expectedResult (calculateTimeWastedByEachTransport 1200))
+

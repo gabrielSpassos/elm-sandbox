@@ -10,9 +10,9 @@ calculateDistanceInKilometers startPoint finishPoint =
 getTransports =
     let
         plane = {name = "plane", timeToDoOneKilometer = 2}
-        car = {name = "plane", timeToDoOneKilometer = 10}
-        motorcycle = {name = "plane", timeToDoOneKilometer = 5}
-        boat = {name = "plane", timeToDoOneKilometer = 10}
+        car = {name = "car", timeToDoOneKilometer = 10}
+        motorcycle = {name = "motorcycle", timeToDoOneKilometer = 5}
+        boat = {name = "boat", timeToDoOneKilometer = 10}
     in
     [plane, car, motorcycle, boat]
 
@@ -34,6 +34,7 @@ type alias TravelSummary =
     }
 
 
+calculateTimeWastedByTransport : Float -> { a | name : String, timeToDoOneKilometer : Float } -> TravelSummary
 calculateTimeWastedByTransport distanceInKilometers transport =
     TravelSummary transport.name distanceInKilometers transport.timeToDoOneKilometer (calculateTimeWasted distanceInKilometers transport.timeToDoOneKilometer)
 
